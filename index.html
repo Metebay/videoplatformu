@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premium Video Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Optimize CSS */
         :root {
             --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
             --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
@@ -39,8 +37,6 @@
             padding: 2.5rem;
             border-radius: 20px;
             width: min(90%, 400px);
-            will-change: transform;
-            transition: transform 0.2s ease;
         }
 
         .login-header {
@@ -66,12 +62,6 @@
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid transparent;
             color: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            border-color: #60efff;
-            box-shadow: 0 0 12px rgba(96, 239, 255, 0.3);
         }
 
         .login-btn {
@@ -83,7 +73,6 @@
             font-weight: 600;
             cursor: pointer;
             border: none;
-            transition: transform 0.2s ease;
         }
 
         .video-gallery {
@@ -103,18 +92,12 @@
             background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
-            transition: transform 0.2s ease;
         }
 
         .thumbnail {
             width: 100%;
             height: 200px;
             object-fit: cover;
-            background: #333;
-        }
-
-        .video-info {
-            padding: 1.2rem;
         }
 
         .video-player {
@@ -128,23 +111,18 @@
             display: none;
         }
 
-        .player-container {
-            position: relative;
+        #main-video {
             width: 90%;
             max-width: 1200px;
             margin: 2rem auto;
-        }
-
-        #main-video {
-            width: 100%;
+            display: block;
             border-radius: 8px;
-            aspect-ratio: 16/9;
         }
 
         .close-btn {
             position: absolute;
-            top: -40px;
-            right: 0;
+            top: 20px;
+            right: 20px;
             font-size: 2rem;
             cursor: pointer;
         }
@@ -154,20 +132,6 @@
             text-align: center;
             margin-top: 1rem;
             display: none;
-        }
-
-        @media (hover: hover) {
-            .login-box:hover {
-                transform: translateY(-3px);
-            }
-            
-            .video-card:hover {
-                transform: translateY(-5px);
-            }
-            
-            .login-btn:hover {
-                transform: scale(1.02);
-            }
         }
     </style>
 </head>
@@ -179,10 +143,10 @@
                 <p>Lütfen giriş yapınız</p>
             </div>
             <div class="input-group">
-                <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="username">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
             </div>
             <div class="input-group">
-                <input type="password" id="password" placeholder="Şifre" autocomplete="current-password">
+                <input type="password" id="password" placeholder="Şifre">
             </div>
             <button class="login-btn" onclick="login()">Giriş Yap</button>
             <div class="error-message" id="errorMessage"></div>
@@ -194,122 +158,72 @@
     </div>
 
     <div class="video-player">
-        <div class="player-container">
-            <span class="close-btn" onclick="closeVideo()">&times;</span>
-            <video id="main-video" controls playsinline>
-                <source src="" type="video/mp4">
-            </video>
-        </div>
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <video id="main-video" controls>
+            <source src="" type="video/mp4">
+        </video>
     </div>
 
     <script>
-        // Optimize Edilmiş Veri Yapısı
-        const database = {
-            users: [
-                {username: "user1", password: "ef92b778bafe771e89245b89ecbc08a44a4e166c2ad3252d5376142a6c2e935f"},
-                {username: "admin", password: "ef92b778bafe771e89245b89ecbc08a44a4e166c2ad3252d5376142a6c2e935f"}
-            ],
-            videos: [
-                {
-                    title: "Big Buck Bunny",
-                    description: "Açık kaynak animasyon",
-                    thumbnail: "https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217",
-                    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                },
-                {
-                    title: "Elephants Dream",
-                    description: "İlk açık film projesi",
-                    thumbnail: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Elephants_Dream_s5_both.jpg/800px-Elephants_Dream_s5_both.jpg",
-                    url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-                }
-            ]
-        };
+        // Basitleştirilmiş veritabanı
+        const users = [
+            {username: "admin", password: "admin123"} // Şifre hash'siz
+        ];
+        
+        const videos = [
+            {
+                title: "Demo Video",
+                description: "Test içeriği",
+                thumbnail: "https://picsum.photos/300/200",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            }
+        ];
 
-        // Optimize Edilmiş Fonksiyonlar
-        const $ = selector => document.querySelector(selector);
-        const $$ = selector => document.querySelectorAll(selector);
+        // Basitleştirilmiş giriş fonksiyonu
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('errorMessage');
 
-        async function hashPassword(password) {
-            const buffer = await crypto.subtle.digest(
-                'SHA-256',
-                new TextEncoder().encode(password)
-            );
-            return Array.from(new Uint8Array(buffer))
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-        }
-
-        async function login() {
-            const username = $('#username').value.trim();
-            const password = $('#password').value;
-            const errorElement = $('#errorMessage');
-            
-            try {
-                if(!username || !password) throw new Error('Lütfen tüm alanları doldurun');
-                
-                const hashedPass = await hashPassword(password);
-                const isValid = database.users.some(
-                    user => user.username === username && user.password === hashedPass
-                );
-
-                if(isValid) {
-                    $('.login-container').style.display = 'none';
-                    $('.video-gallery').style.display = 'block';
-                    errorElement.style.display = 'none';
-                    loadVideos();
-                } else {
-                    throw new Error('Geçersiz kimlik bilgileri');
-                }
-            } catch(err) {
-                errorElement.textContent = err.message;
+            if(username === users[0].username && password === users[0].password) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.video-gallery').style.display = 'block';
+                loadVideos();
+            } else {
+                errorElement.textContent = "Hatalı giriş!";
                 errorElement.style.display = 'block';
             }
         }
 
         function loadVideos() {
-            const container = $('#videoContainer');
-            const fragment = document.createDocumentFragment();
-            
-            database.videos.forEach(video => {
+            const container = document.getElementById('videoContainer');
+            videos.forEach(video => {
                 const card = document.createElement('div');
                 card.className = 'video-card';
                 card.innerHTML = `
-                    <img src="${video.thumbnail}" class="thumbnail" loading="lazy" alt="${video.title}">
+                    <img src="${video.thumbnail}" class="thumbnail">
                     <div class="video-info">
                         <h3>${video.title}</h3>
                         <p>${video.description}</p>
                     </div>
                 `;
                 card.onclick = () => playVideo(video.url);
-                fragment.appendChild(card);
+                container.appendChild(card);
             });
-            
-            container.appendChild(fragment);
         }
 
         function playVideo(url) {
-            const video = $('#main-video');
+            const video = document.getElementById('main-video');
             video.src = url;
-            $('.video-player').style.display = 'block';
-            video.play().catch(err => console.error('Video oynatma hatası:', err));
+            document.querySelector('.video-player').style.display = 'block';
         }
 
         function closeVideo() {
-            const video = $('#main-video');
+            const video = document.getElementById('main-video');
             video.pause();
-            video.removeAttribute('src');
-            $('.video-player').style.display = 'none';
+            video.src = '';
+            document.querySelector('.video-player').style.display = 'none';
         }
-
-        // Event Delegation
-        document.addEventListener('click', event => {
-            if(event.target.closest('.video-player')) closeVideo();
-        });
-
-        // Enter tuşu desteği
-        document.addEventListener('keypress', e => {
-            if(e.key === 'Enter' && $('.login-container').style.display !== 'none') login();
-        });
     </script>
 </body>
 </html>
