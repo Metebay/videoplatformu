@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Çalışan Video Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Video Platform</title>
     <style>
-      :root {
+        :root {
             --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
             --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             --card-bg: rgba(255, 255, 255, 0.1);
@@ -134,56 +136,123 @@
     </style>
 </head>
 <body>
-    
-    <!-- Giriş Ekranı -->
-    <div id="login">
-        <h1>Video Platform</h1>
-        <input type="text" placeholder="Kullanıcı Adı" id="user"><br><br>
-        <input type="password" placeholder="Şifre" id="pass"><br><br>
-        <button onclick="girisYap()">Giriş Yap</button>
-        <p id="hata" style="color:red;display:none;">Hatalı bilgi!</p>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Hoş Geldiniz</h1>
+                <p>Lütfen giriş yapınız</p>
+            </div>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Şifre">
+            </div>
+            <button class="login-btn" onclick="login()">Giriş Yap</button>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
     </div>
 
-    <!-- Video Listesi -->
-    <div id="liste" style="display:none;">
-        <h2>Videolar</h2>
-        <div class="video-item" onclick="videoAc('https://www.w3schools.com/html/mov_bbb.mp4')">Video 1</div>
-        <div class="video-item" onclick="videoAc('https://www.w3schools.com/html/movie.mp4')">Video 2</div>
+    <div class="video-gallery">
+        <div class="gallery-grid" id="videoContainer"></div>
     </div>
 
-    <!-- Video Oynatıcı -->
-    <div id="player">
-        <button onclick="kapat()" style="position:fixed;top:20px;right:20px;background:red;color:white;padding:10px;">KAPAT</button>
-        <video id="video" controls>
+    <div class="video-player">
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <video id="main-video" controls>
             <source src="" type="video/mp4">
         </video>
     </div>
 
     <script>
-        // Giriş Kontrolü
-        function girisYap() {
-            const user = document.getElementById("user").value;
-            const pass = document.getElementById("pass").value;
-            
-            if(user === "admin" && pass === "1234") {
-                document.getElementById("login").style.display = "none";
-                document.getElementById("liste").style.display = "block";
+        // Test Verileri
+        const users = [
+            { username: "admin", password: "1234" },
+            { username: "user", password: "password" }
+        ];
+
+        const videos = [
+            {
+                title: "Big Buck Bunny",
+                description: "Ücretsiz animasyon filmi",
+                thumbnail: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            },
+            {
+                title: "Elephants Dream",
+                description: "Açık kaynak animasyon",
+                thumbnail: "https://upload.wikimedia.org/wikipedia/commons/7/70/Elephants_Dream_s5_both.jpg",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            }
+        ];
+
+        // Giriş Fonksiyonu
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('errorMessage');
+
+            const isValidUser = users.some(user => 
+                user.username === username && user.password === password
+            );
+
+            if(isValidUser) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.video-gallery').style.display = 'block';
+                errorElement.style.display = 'none';
+                loadVideos();
             } else {
-                document.getElementById("hata").style.display = "block";
+                errorElement.textContent = "Geçersiz kullanıcı adı veya şifre!";
+                errorElement.style.display = 'block';
             }
         }
 
-        // Video Açma
-        function videoAc(url) {
-            document.getElementById("player").style.display = "block";
-            document.getElementById("video").src = url;
+        // Video Yükleme
+        function loadVideos() {
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = ''; // Önceki içeriği temizle
+
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.innerHTML = `
+                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                    <div class="video-info">
+                        <h3>${video.title}</h3>
+                        <p>${video.description}</p>
+                    </div>
+                `;
+                card.addEventListener('click', () => playVideo(video.url));
+                container.appendChild(card);
+            });
         }
 
-        // Oynatıcıyı Kapat
-        function kapat() {
-            document.getElementById("player").style.display = "none";
-            document.getElementById("video").pause();
+        // Video Oynatma
+        function playVideo(url) {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.src = url;
+            videoPlayer.style.display = 'block';
+            videoElement.play();
         }
+
+        // Video Kapatma
+        function closeVideo() {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.pause();
+            videoElement.src = '';
+            videoPlayer.style.display = 'none';
+        }
+
+        // Pencere dışı tıklamada kapatma
+        window.addEventListener('click', (e) => {
+            if(e.target.classList.contains('video-player')) {
+                closeVideo();
+            }
+        });
     </script>
 </body>
 </html>
