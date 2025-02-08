@@ -1,228 +1,86 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Video Platform</title>
+    <title>Çalışan Video Platform</title>
     <style>
-        :root {
-            --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
-            --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            --card-bg: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-
         body {
-            background: var(--background-gradient);
-            color: #fff;
-            min-height: 100vh;
-        }
-
-        .login-container {
-            display: flex;
-            padding: 20px;
-            min-height: 100vh;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-box {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            width: min(90%, 400px);
-        }
-
-        .login-header {
+            background: #2d2d2d;
+            color: white;
+            font-family: Arial;
             text-align: center;
-            margin-bottom: 2rem;
         }
-
-        .login-header h1 {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid transparent;
-            color: #fff;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 0.8rem;
-            border-radius: 10px;
-            background: var(--primary-gradient);
-            color: #1a1a1a;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-        }
-
-        .video-gallery {
+        #player {
             display: none;
-            padding: 2rem 1rem;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .video-card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .thumbnail {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .video-player {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-            display: none;
+            background: rgba(0,0,0,0.9);
         }
-
-        #main-video {
-            width: 90%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            display: block;
-            border-radius: 8px;
+        video {
+            width: 80%;
+            margin-top: 50px;
         }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2rem;
+        .video-item {
+            background: #444;
+            margin: 10px;
+            padding: 15px;
             cursor: pointer;
-        }
-
-        .error-message {
-            color: #ff4444;
-            text-align: center;
-            margin-top: 1rem;
-            display: none;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <h1>Hoş Geldiniz</h1>
-                <p>Lütfen giriş yapınız</p>
-            </div>
-            <div class="input-group">
-                <input type="text" id="username" placeholder="Kullanıcı Adı">
-            </div>
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Şifre">
-            </div>
-            <button class="login-btn" onclick="login()">Giriş Yap</button>
-            <div class="error-message" id="errorMessage"></div>
-        </div>
+    
+    <!-- Giriş Ekranı -->
+    <div id="login">
+        <h1>Video Platform</h1>
+        <input type="text" placeholder="Kullanıcı Adı" id="user"><br><br>
+        <input type="password" placeholder="Şifre" id="pass"><br><br>
+        <button onclick="girisYap()">Giriş Yap</button>
+        <p id="hata" style="color:red;display:none;">Hatalı bilgi!</p>
     </div>
 
-    <div class="video-gallery">
-        <div class="gallery-grid" id="videoContainer"></div>
+    <!-- Video Listesi -->
+    <div id="liste" style="display:none;">
+        <h2>Videolar</h2>
+        <div class="video-item" onclick="videoAc('https://www.w3schools.com/html/mov_bbb.mp4')">Video 1</div>
+        <div class="video-item" onclick="videoAc('https://www.w3schools.com/html/movie.mp4')">Video 2</div>
     </div>
 
-    <div class="video-player">
-        <span class="close-btn" onclick="closeVideo()">&times;</span>
-        <video id="main-video" controls>
+    <!-- Video Oynatıcı -->
+    <div id="player">
+        <button onclick="kapat()" style="position:fixed;top:20px;right:20px;background:red;color:white;padding:10px;">KAPAT</button>
+        <video id="video" controls>
             <source src="" type="video/mp4">
         </video>
     </div>
 
     <script>
-        // Basitleştirilmiş veritabanı
-        const users = [
-            {username: "admin", password: "admin123"} // Şifre hash'siz
-        ];
-        
-        const videos = [
-            {
-                title: "Demo Video",
-                description: "Test içeriği",
-                thumbnail: "https://picsum.photos/300/200",
-                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            }
-        ];
-
-        // Basitleştirilmiş giriş fonksiyonu
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('errorMessage');
-
-            if(username === users[0].username && password === users[0].password) {
-                document.querySelector('.login-container').style.display = 'none';
-                document.querySelector('.video-gallery').style.display = 'block';
-                loadVideos();
+        // Giriş Kontrolü
+        function girisYap() {
+            const user = document.getElementById("user").value;
+            const pass = document.getElementById("pass").value;
+            
+            if(user === "admin" && pass === "1234") {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("liste").style.display = "block";
             } else {
-                errorElement.textContent = "Hatalı giriş!";
-                errorElement.style.display = 'block';
+                document.getElementById("hata").style.display = "block";
             }
         }
 
-        function loadVideos() {
-            const container = document.getElementById('videoContainer');
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <img src="${video.thumbnail}" class="thumbnail">
-                    <div class="video-info">
-                        <h3>${video.title}</h3>
-                        <p>${video.description}</p>
-                    </div>
-                `;
-                card.onclick = () => playVideo(video.url);
-                container.appendChild(card);
-            });
+        // Video Açma
+        function videoAc(url) {
+            document.getElementById("player").style.display = "block";
+            document.getElementById("video").src = url;
         }
 
-        function playVideo(url) {
-            const video = document.getElementById('main-video');
-            video.src = url;
-            document.querySelector('.video-player').style.display = 'block';
-        }
-
-        function closeVideo() {
-            const video = document.getElementById('main-video');
-            video.pause();
-            video.src = '';
-            document.querySelector('.video-player').style.display = 'none';
+        // Oynatıcıyı Kapat
+        function kapat() {
+            document.getElementById("player").style.display = "none";
+            document.getElementById("video").pause();
         }
     </script>
 </body>
