@@ -3,31 +3,133 @@
 <head>
     <title>Çalışan Video Platform</title>
     <style>
-        body {
-            background: #2d2d2d;
-            color: white;
-            font-family: Arial;
-            text-align: center;
+      :root {
+            --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
+            --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            --card-bg: rgba(255, 255, 255, 0.1);
         }
-        #player {
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--background-gradient);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .login-container {
+            display: flex;
+            padding: 20px;
+            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: min(90%, 400px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid transparent;
+            color: #fff;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            color: #1a1a1a;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .video-gallery {
             display: none;
+            padding: 2rem 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .video-player {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
         }
-        video {
-            width: 80%;
-            margin-top: 50px;
+
+        #main-video {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 8px;
         }
-        .video-item {
-            background: #444;
-            margin: 10px;
-            padding: 15px;
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
             cursor: pointer;
-            display: inline-block;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
