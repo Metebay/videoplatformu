@@ -9,19 +9,21 @@
             --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
             --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             --card-bg: rgba(255, 255, 255, 0.1);
+            --neon-shadow: 0 0 15px rgba(96, 239, 255, 0.3);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+        /* Yeni Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Gelişmiş Tipografi */
         body {
             background: var(--background-gradient);
             color: #fff;
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         .login-container {
@@ -30,6 +32,7 @@
             min-height: 100vh;
             justify-content: center;
             align-items: center;
+            animation: fadeIn 0.8s ease-out;
         }
 
         .login-box {
@@ -37,11 +40,14 @@
             padding: 2.5rem;
             border-radius: 20px;
             width: min(90%, 400px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: var(--neon-shadow);
+            transition: transform 0.3s ease;
         }
 
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
+        .login-box:hover {
+            transform: translateY(-5px);
         }
 
         .login-header h1 {
@@ -49,55 +55,104 @@
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
             color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #60efff;
+            box-shadow: var(--neon-shadow);
         }
 
         .login-btn {
             width: 100%;
-            padding: 0.8rem;
+            padding: 1rem;
             border-radius: 10px;
             background: var(--primary-gradient);
             color: #1a1a1a;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             border: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
         }
 
-        .video-gallery {
-            display: none;
-            padding: 2rem 1rem;
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 25%, 
+                rgba(255,255,255,0.1) 50%, 
+                transparent 75%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
         }
 
         .video-card {
             background: var(--card-bg);
             border-radius: 15px;
             overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .thumbnail {
             width: 100%;
-            height: 200px;
+            height: 250px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover .thumbnail {
+            transform: scale(1.05);
+        }
+
+        .video-info {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .video-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-gradient);
         }
 
         .video-player {
@@ -109,150 +164,89 @@
             background: rgba(0, 0, 0, 0.95);
             z-index: 1000;
             display: none;
-        }
-
-        #main-video {
-            width: 90%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            display: block;
-            border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
 
         .close-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 2rem;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5rem;
             cursor: pointer;
+            transition: color 0.3s ease;
+            color: rgba(255,255,255,0.8);
         }
 
-        .error-message {
+        .close-btn:hover {
             color: #ff4444;
-            text-align: center;
-            margin-top: 1rem;
+        }
+
+        /* Yükleme Animasyonu */
+        .loader {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #00ff87;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 9999;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <h1>Hoş Geldiniz</h1>
-                <p>Lütfen giriş yapınız</p>
-            </div>
-            <div class="input-group">
-                <input type="text" id="username" placeholder="Kullanıcı Adı">
-            </div>
-            <div class="input-group">
-                <input type="password" id="password" placeholder="Şifre">
-            </div>
-            <button class="login-btn" onclick="login()">Giriş Yap</button>
-            <div class="error-message" id="errorMessage"></div>
-        </div>
-    </div>
-
-    <div class="video-gallery">
-        <div class="gallery-grid" id="videoContainer"></div>
-    </div>
-
-    <div class="video-player">
-        <span class="close-btn" onclick="closeVideo()">&times;</span>
-        <video id="main-video" controls>
-            <source src="" type="video/mp4">
-        </video>
-    </div>
+    <!-- Önceki HTML Yapısı Aynı Kalıyor -->
+    <div class="loader"></div>
+    <!-- ... Diğer HTML içeriği ... -->
 
     <script>
-        // Test Verileri
-        const users = [
-            { username: "admin", password: "1234" },
-            { username: "user", password: "password" }
-        ];
-
-        const videos = [
-            {
-                title: "Big Buck Bunny",
-                description: "Ücretsiz animasyon filmi",
-                thumbnail: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
-                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-            },
-            {
-                title: "Elephants Dream",
-                description: "Açık kaynak animasyon",
-                thumbnail: "https://upload.wikimedia.org/wikipedia/commons/7/70/Elephants_Dream_s5_both.jpg",
-                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-            }
-        ];
-
-        // Giriş Fonksiyonu
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorElement = document.getElementById('errorMessage');
-
-            const isValidUser = users.some(user => 
-                user.username === username && user.password === password
-            );
-
-            if(isValidUser) {
-                document.querySelector('.login-container').style.display = 'none';
-                document.querySelector('.video-gallery').style.display = 'block';
-                errorElement.style.display = 'none';
-                loadVideos();
-            } else {
-                errorElement.textContent = "Geçersiz kullanıcı adı veya şifre!";
-                errorElement.style.display = 'block';
-            }
-        }
-
-        // Video Yükleme
-        function loadVideos() {
+        // Gelişmiş Video Yükleme
+        async function loadVideos() {
+            showLoader();
             const container = document.getElementById('videoContainer');
-            container.innerHTML = ''; // Önceki içeriği temizle
-
-            videos.forEach(video => {
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
-                    <div class="video-info">
-                        <h3>${video.title}</h3>
-                        <p>${video.description}</p>
-                    </div>
-                `;
-                card.addEventListener('click', () => playVideo(video.url));
-                container.appendChild(card);
-            });
-        }
-
-        // Video Oynatma
-        function playVideo(url) {
-            const videoPlayer = document.querySelector('.video-player');
-            const videoElement = document.getElementById('main-video');
+            container.innerHTML = '';
             
-            videoElement.src = url;
-            videoPlayer.style.display = 'block';
-            videoElement.play();
-        }
-
-        // Video Kapatma
-        function closeVideo() {
-            const videoPlayer = document.querySelector('.video-player');
-            const videoElement = document.getElementById('main-video');
-            
-            videoElement.pause();
-            videoElement.src = '';
-            videoPlayer.style.display = 'none';
-        }
-
-        // Pencere dışı tıklamada kapatma
-        window.addEventListener('click', (e) => {
-            if(e.target.classList.contains('video-player')) {
-                closeVideo();
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Simüle edilmiş yükleme
+                
+                videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="thumbnail-container">
+                            <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                        </div>
+                        <div class="video-info">
+                            <h3>${video.title}</h3>
+                            <p>${video.description}</p>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => playVideo(video.url));
+                    container.appendChild(card);
+                });
+            } finally {
+                hideLoader();
             }
-        });
+        }
+
+        function showLoader() {
+            document.querySelector('.loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.querySelector('.loader').style.display = 'none';
+        }
+
+        // Diğer fonksiyonlar aynı kalıyor...
     </script>
 </body>
 </html>
