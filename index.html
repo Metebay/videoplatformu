@@ -3,270 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APK Deposu | Güvenli Uygulama İndir</title>
+    <title>Premium Video Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Temel Stiller */
+        :root {
+            --primary-gradient: linear-gradient(45deg, #00ff87, #60efff);
+            --background-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --neon-shadow: 0 0 15px rgba(96, 239, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background: #f8f9fa;
-            color: #2c3e50;
-            line-height: 1.6;
+            background: var(--background-gradient);
+            color: #fff;
+            min-height: 100vh;
         }
 
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Başlık ve Arama Çubuğu */
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .search-container {
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1rem;
-            background: rgba(255,255,255,0.9);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            background: white;
-        }
-
-        /* APK Listesi */
-        .apk-list {
-            display: grid;
-            gap: 1.5rem;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        .apk-item {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+        .login-container {
             display: flex;
+            padding: 20px;
+            min-height: 100vh;
+            justify-content: center;
             align-items: center;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        .apk-item.hidden {
-            display: none;
+        .login-box {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: min(90%, 400px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: var(--neon-shadow);
+            transition: transform 0.3s ease;
         }
 
-        .apk-icon {
-            font-size: 2rem;
-            color: #6366f1;
-            margin-right: 1.5rem;
+        .login-box:hover {
+            transform: translateY(-5px);
         }
 
-        .apk-info {
-            flex: 1;
-        }
-
-        .apk-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+        .login-header h1 {
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
             margin-bottom: 0.5rem;
         }
 
-        .apk-meta {
-            font-size: 0.9rem;
-            color: #6c757d;
-            display: flex;
-            justify-content: space-between;
+        .input-group input {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid transparent;
+            color: #fff;
+            transition: all 0.3s ease;
         }
 
-        .download-btn {
-            background: #6366f1;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            transition: background 0.3s ease;
+        .input-group input:focus {
+            border-color: #60efff;
+            box-shadow: var(--neon-shadow);
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            color: #1a1a1a;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 25%, 
+                rgba(255,255,255,0.1) 50%, 
+                transparent 75%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        .video-gallery {
+            display: none;
+            padding: 2rem 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .video-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            position: relative;
             display: inline-block;
+        }
+
+        .video-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-gradient);
+        }
+
+        .video-player {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+
+        #main-video {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .close-btn:hover {
+            color: #ff4444;
+        }
+
+        .loader {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #00ff87;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 9999;
+        }
+
+        .error-message {
+            color: #ff4444;
+            text-align: center;
             margin-top: 1rem;
-        }
-
-        .download-btn:hover {
-            background: #4f46e5;
-        }
-
-        /* Sonuç Bulunamadı Mesajı */
-        .no-results {
-            text-align: center;
-            color: #6c757d;
-            padding: 2rem;
-            grid-column: 1 / -1;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            margin-top: 4rem;
-            padding: 2rem;
-            color: #6c757d;
-            border-top: 1px solid #eee;
-        }
-
-        /* Responsive Tasarım */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .apk-list {
-                grid-template-columns: 1fr;
-            }
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="container">
-            <h1><i class="fas fa-download"></i>APK Deposu</h1>
-            <div class="search-container">
-                <input type="text" 
-                       class="search-input" 
-                       placeholder="Uygulama ara..."
-                       id="searchInput">
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Hoş Geldiniz</h1>
+                <p>Lütfen giriş yapınız</p>
             </div>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Şifre">
+            </div>
+            <button class="login-btn" onclick="login()">Giriş Yap</button>
+            <div class="error-message" id="errorMessage"></div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="apk-list" id="apkList">
-            <!-- APK'lar buraya eklenecek -->
-        </div>
-        <div class="no-results hidden" id="noResults">
-            Aradığınız uygulama bulunamadı 😞
-        </div>
+    <div class="video-gallery">
+        <div class="gallery-grid" id="videoContainer"></div>
     </div>
 
-    <div class="footer">
-        <div class="container">
-            <p>© 2023 APK Deposu - Tüm hakları saklıdır</p>
-            <p>Güvenli indirme garantisi</p>
-        </div>
+    <div class="video-player">
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <video id="main-video" controls>
+            <source src="" type="video/mp4">
+        </video>
     </div>
+
+    <div class="loader"></div>
 
     <script>
-        // APK Listesi (Manuel olarak güncelleyin)
-        const apkData = [
+        const users = [
+            { username: "admin", password: "1234" },
+            { username: "user", password: "password" }
+        ];
+
+        const videos = [
             {
-                name: "WhatsApp Messenger",
-                version: "2.23.15",
-                size: "45 MB",
-                url: "apk/whatsapp.apk"
+                title: "Big Buck Bunny",
+                description: "Ücretsiz animasyon filmi",
+                thumbnail: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
             },
             {
-                name: "Instagram",
-                version: "289.0.0.20",
-                size: "92 MB",
-                url: "apk/instagram.apk"
-            },
-            {
-                name: "TikTok",
-                version: "30.5.4",
-                size: "128 MB",
-                url: "apk/tiktok.apk"
-            },
-            {
-                name: "Spotify",
-                version: "8.8.52",
-                size: "85 MB",
-                url: "apk/spotify.apk"
-            },
-            {
-                name: "Telegram",
-                version: "9.7.4",
-                size: "78 MB",
-                url: "apk/telegram.apk"
+                title: "Elephants Dream",
+                description: "Açık kaynak animasyon",
+                thumbnail: "https://upload.wikimedia.org/wikipedia/commons/7/70/Elephants_Dream_s5_both.jpg",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
             }
         ];
 
-        // APK Listesini Oluştur
-        const apkList = document.getElementById('apkList');
-        const searchInput = document.getElementById('searchInput');
-        const noResults = document.getElementById('noResults');
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('errorMessage');
 
-        function renderApkList(filterText = '') {
-            apkList.innerHTML = '';
-            noResults.classList.add('hidden');
-            
-            const filteredApks = apkData.filter(apk => {
-                return apk.name.toLowerCase().includes(filterText.toLowerCase());
-            });
+            const isValidUser = users.some(user => 
+                user.username === username && user.password === password
+            );
 
-            if(filteredApks.length === 0) {
-                noResults.classList.remove('hidden');
-                return;
+            if(isValidUser) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.video-gallery').style.display = 'block';
+                errorElement.style.display = 'none';
+                loadVideos();
+            } else {
+                errorElement.textContent = "Geçersiz kullanıcı adı veya şifre!";
+                errorElement.style.display = 'block';
             }
-
-            filteredApks.forEach(apk => {
-                const apkItem = document.createElement('div');
-                apkItem.className = 'apk-item';
-                apkItem.innerHTML = `
-                    <i class="fas fa-mobile-alt apk-icon"></i>
-                    <div class="apk-info">
-                        <div class="apk-title">${apk.name}</div>
-                        <div class="apk-meta">
-                            <span>v${apk.version}</span>
-                            <span>${apk.size}</span>
-                        </div>
-                        <a href="${apk.url}" class="download-btn" download>
-                            <i class="fas fa-download"></i> İndir
-                        </a>
-                    </div>
-                `;
-                apkList.appendChild(apkItem);
-            });
         }
 
-        // Arama İşlevselliği
-        searchInput.addEventListener('input', (e) => {
-            renderApkList(e.target.value);
-        });
+        function loadVideos() {
+            showLoader();
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
+            
+            setTimeout(() => {
+                videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                        <div class="video-info">
+                            <h3>${video.title}</h3>
+                            <p>${video.description}</p>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => playVideo(video.url));
+                    container.appendChild(card);
+                });
+                hideLoader();
+            }, 1000);
+        }
 
-        // İlk Yüklemede Listeyi Göster
-        renderApkList();
+        function playVideo(url) {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.src = url;
+            videoPlayer.style.display = 'block';
+            videoElement.play();
+        }
+
+        function closeVideo() {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.pause();
+            videoElement.src = '';
+            videoPlayer.style.display = 'none';
+        }
+
+        function showLoader() {
+            document.querySelector('.loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.querySelector('.loader').style.display = 'none';
+        }
+
+        window.addEventListener('click', (e) => {
+            if(e.target.classList.contains('video-player')) {
+                closeVideo();
+            }
+        });
     </script>
 </body>
 </html>
