@@ -1,0 +1,32 @@
+{
+    "videos": [
+        {
+            "id": 1,
+            "title": "Başlangıç Rehberi",
+            "description": "Temel eğitim videoları",
+            "thumbnail": "thumb1.jpg",
+            "url": "video1.mp4"
+        },
+        {
+            "id": 2,
+            "title": "İleri Seviye Teknikler",
+            "description": "Uzmanlar için ipuçları",
+            "thumbnail": "thumb2.jpg",
+            "url": "video2.mp4"
+        },
+        {
+            "id": 3,
+            "title": "Optimizasyon Yöntemleri",
+            "description": "Performans iyileştirme",
+            "thumbnail": "thumb3.jpg",
+            "url": "video3.mp4"
+        },
+        {
+            "id": 4,
+            "title": "Son Teknolojiler",
+            "description": "Yeni trendler ve araçlar",
+            "thumbnail": "thumb4.jpg",
+            "url": "video4.mp4"
+        }
+    ]
+}

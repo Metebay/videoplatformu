@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Video Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Giriş Ekranı */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .login-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ff87, #60efff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(96, 239, 255, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #00ff87, #60efff);
+            color: #1a1a1a;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(96, 239, 255, 0.4);
+        }
+
+        /* Video Galeri */
+        .video-gallery {
+            display: none;
+            padding: 40px 20px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .video-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Video Player */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+
+        .player-container {
+            position: relative;
+            width: 80%;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        #main-video {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            font-size: 30px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        /* Hata Mesajı */
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Giriş Ekranı -->
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Hoş Geldiniz</h1>
+                <p>Lütfen giriş yapınız</p>
+            </div>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Şifre">
+            </div>
+            <button class="login-btn" onclick="login()">Giriş Yap</button>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <!-- Video Galeri -->
+    <div class="video-gallery">
+        <div class="gallery-grid" id="videoContainer"></div>
+    </div>
+
+    <!-- Video Player -->
+    <div class="video-player">
+        <div class="player-container">
+            <span class="close-btn" onclick="closeVideo()">&times;</span>
+            <video id="main-video" controls>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script>
+        // SHA-256 Hash Fonksiyonu
+        async function hashPassword(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hashBuffer))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Video Kartları Oluşturma
+        async function loadVideos() {
+            try {
+                const response = await fetch('videos.json');
+                const data = await response.json();
+                const container = document.getElementById('videoContainer');
+                
+                data.videos.forEach(video => {
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
+                        <div class="video-info">
+                            <h3 class="video-title">${video.title}</h3>
+                            <p class="video-description">${video.description}</p>
+                        </div>
+                    `;
+                    card.onclick = () => playVideo(video.url);
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Video yükleme hatası:', error);
+            }
+        }
+
+        // Giriş İşlemi
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            try {
+                // Kullanıcı doğrulama
+                const userResponse = await fetch('users.json');
+                const userData = await userResponse.json();
+                const hashedPassword = await hashPassword(password);
+                
+                const user = userData.users.find(u => 
+                    u.username === username && 
+                    u.password === hashedPassword
+                );
+
+                if(user) {
+                    // Giriş başarılı
+                    document.querySelector('.login-container').style.display = 'none';
+                    document.querySelector('.video-gallery').style.display = 'block';
+                    errorMessage.style.display = 'none';
+                    await loadVideos();
+                } else {
+                    throw new Error('Geçersiz kimlik bilgileri');
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Hatalı giriş! Lütfen bilgilerinizi kontrol edin.';
+                errorMessage.style.display = 'block';
+                console.error('Giriş hatası:', error);
+            }
+        }
+
+        // Video Oynatıcı Kontrolleri
+        function playVideo(videoUrl) {
+            const videoPlayer = document.querySelector('.video-player');
+            const mainVideo = document.getElementById('main-video');
+            mainVideo.src = videoUrl;
+            videoPlayer.style.display = 'block';
+            mainVideo.play();
+        }
+
+        function closeVideo() {
+            const videoPlayer = document.querySelector('.video-player');
+            const mainVideo = document.getElementById('main-video');
+            mainVideo.pause();
+            mainVideo.src = '';
+            videoPlayer.style.display = 'none';
+        }
+
+        // Pencere dışı tıklamalarda video kapatma
+        window.onclick = function(event) {
+            const videoPlayer = document.querySelector('.video-player');
+            if (event.target === videoPlayer) {
+                closeVideo();
+            }
+        }
+    </script>
+</body>
+</html>
