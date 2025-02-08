@@ -12,13 +12,28 @@
             --neon-shadow: 0 0 15px rgba(96, 239, 255, 0.3);
         }
 
-        /* Yeni Animasyonlar */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Gelişmiş Tipografi */
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
         body {
             background: var(--background-gradient);
             color: #fff;
@@ -50,6 +65,11 @@
             transform: translateY(-5px);
         }
 
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
         .login-header h1 {
             font-size: clamp(2rem, 5vw, 2.5rem);
             background: var(--primary-gradient);
@@ -57,6 +77,10 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: -1px;
             margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
         }
 
         .input-group input {
@@ -103,9 +127,17 @@
             animation: shine 3s infinite;
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+        .video-gallery {
+            display: none;
+            padding: 2rem 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .video-card {
@@ -167,6 +199,14 @@
             backdrop-filter: blur(10px);
         }
 
+        #main-video {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            display: block;
+            border-radius: 8px;
+        }
+
         .close-btn {
             position: absolute;
             top: 30px;
@@ -181,7 +221,6 @@
             color: #ff4444;
         }
 
-        /* Yükleme Animasyonu */
         .loader {
             display: none;
             position: fixed;
@@ -197,34 +236,97 @@
             z-index: 9999;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .error-message {
+            color: #ff4444;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Önceki HTML Yapısı Aynı Kalıyor -->
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>Hoş Geldiniz</h1>
+                <p>Lütfen giriş yapınız</p>
+            </div>
+            <div class="input-group">
+                <input type="text" id="username" placeholder="Kullanıcı Adı">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Şifre">
+            </div>
+            <button class="login-btn" onclick="login()">Giriş Yap</button>
+            <div class="error-message" id="errorMessage"></div>
+        </div>
+    </div>
+
+    <div class="video-gallery">
+        <div class="gallery-grid" id="videoContainer"></div>
+    </div>
+
+    <div class="video-player">
+        <span class="close-btn" onclick="closeVideo()">&times;</span>
+        <video id="main-video" controls>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+
     <div class="loader"></div>
-    <!-- ... Diğer HTML içeriği ... -->
 
     <script>
-        // Gelişmiş Video Yükleme
-        async function loadVideos() {
+        const users = [
+            { username: "admin", password: "1234" },
+            { username: "user", password: "password" }
+        ];
+
+        const videos = [
+            {
+                title: "Big Buck Bunny",
+                description: "Ücretsiz animasyon filmi",
+                thumbnail: "https://peach.blender.org/wp-content/uploads/bbb-splash.png",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+            },
+            {
+                title: "Elephants Dream",
+                description: "Açık kaynak animasyon",
+                thumbnail: "https://upload.wikimedia.org/wikipedia/commons/7/70/Elephants_Dream_s5_both.jpg",
+                url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
+            }
+        ];
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('errorMessage');
+
+            const isValidUser = users.some(user => 
+                user.username === username && user.password === password
+            );
+
+            if(isValidUser) {
+                document.querySelector('.login-container').style.display = 'none';
+                document.querySelector('.video-gallery').style.display = 'block';
+                errorElement.style.display = 'none';
+                loadVideos();
+            } else {
+                errorElement.textContent = "Geçersiz kullanıcı adı veya şifre!";
+                errorElement.style.display = 'block';
+            }
+        }
+
+        function loadVideos() {
             showLoader();
             const container = document.getElementById('videoContainer');
             container.innerHTML = '';
             
-            try {
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simüle edilmiş yükleme
-                
+            setTimeout(() => {
                 videos.forEach(video => {
                     const card = document.createElement('div');
                     card.className = 'video-card';
                     card.innerHTML = `
-                        <div class="thumbnail-container">
-                            <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
-                        </div>
+                        <img src="${video.thumbnail}" class="thumbnail" alt="${video.title}">
                         <div class="video-info">
                             <h3>${video.title}</h3>
                             <p>${video.description}</p>
@@ -233,9 +335,26 @@
                     card.addEventListener('click', () => playVideo(video.url));
                     container.appendChild(card);
                 });
-            } finally {
                 hideLoader();
-            }
+            }, 1000);
+        }
+
+        function playVideo(url) {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.src = url;
+            videoPlayer.style.display = 'block';
+            videoElement.play();
+        }
+
+        function closeVideo() {
+            const videoPlayer = document.querySelector('.video-player');
+            const videoElement = document.getElementById('main-video');
+            
+            videoElement.pause();
+            videoElement.src = '';
+            videoPlayer.style.display = 'none';
         }
 
         function showLoader() {
@@ -246,7 +365,11 @@
             document.querySelector('.loader').style.display = 'none';
         }
 
-        // Diğer fonksiyonlar aynı kalıyor...
+        window.addEventListener('click', (e) => {
+            if(e.target.classList.contains('video-player')) {
+                closeVideo();
+            }
+        });
     </script>
 </body>
 </html>
